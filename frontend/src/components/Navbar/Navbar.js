@@ -45,8 +45,8 @@ const Navbar = () => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose} component='a' href='/login'>Log In</MenuItem>
-            <MenuItem onClick={handleMenuClose} component='a' href='/signup'>Sign Up</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to='/login'>Log In</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to='/signup'>Sign Up</MenuItem>
         </Menu>
     );
 
@@ -61,7 +61,7 @@ const Navbar = () => {
             open={isMobileMenuOpen}
             onClose={handleMobileMenuClose}
         >
-            <MenuItem href="/cart">
+            <MenuItem component={Link} to="/cart">
                 <IconButton aria-label="go to cart" color="inherit">
                     <Badge badgeContent={4} color="secondary">
                         <CartIcon />
@@ -114,7 +114,7 @@ const Navbar = () => {
                         </div>
                         <div className={classes.grow} />
                         <div className={classes.sectionDesktop}>
-                            <IconButton href="/cart" aria-label="go to cart" color="inherit">
+                            <IconButton component={Link} to="/cart" aria-label="go to cart" color="inherit">
                                 <Badge badgeContent={4} color="secondary" className={classes.badgeDesktop}>
                                     <CartIcon />
                                 </Badge>

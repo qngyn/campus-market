@@ -6,26 +6,16 @@ import products from '../../products';
 const HomePage = () => {
     return (
         <>
-            <main>
-                <Container>
-                    <h1>Latest Products</h1>
-                    <Grid container spacing={2}>
-                        {products.map((product) => (
-                            <Grid item key={product._id} xs={12} sm={4} md={3}>
-                                <Product product={product} key={product._id} />
-                            </Grid>
-                        ))}
+            <h1>Latest Products</h1>
+            <Grid container spacing={2}>
+                {products.map((product) => (
+                    <Grid item key={product._id} xs={12} sm={4} md={3}>
+                        <Product product={product} key={product._id} />
                     </Grid>
-
-                </Container>
-            </main>
+                ))}
+            </Grid>
 
         </>
-        /* 
-        <div>
-            
-        </div>
-         */
 
     )
 }

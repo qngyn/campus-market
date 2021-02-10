@@ -34,7 +34,7 @@ Rating.defaultProps = {
 Rating.propTypes = {
     value: PropTypes.number.isRequired,
     text: PropTypes.string.isRequired,
-    value: PropTypes.string
+    value: PropTypes.number
 }
 
 export default Rating;
