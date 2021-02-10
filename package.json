@@ -1,0 +1,22 @@
+{
+  "name": "campus-market",
+  "version": "1.0.0",
+  "description": "online campus marketplace",
+  "main": "server.js",
+  "scripts": {
+    "start": "node backend/server"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/thiennhanng191/campus-market.git"
+  },
+  "author": "Nhan Nguyen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/thiennhanng191/campus-market/issues"
+  },
+  "homepage": "https://github.com/thiennhanng191/campus-market#readme",
+  "dependencies": {
+    "express": "^4.17.1"
+  }
+}
