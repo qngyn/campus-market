@@ -1,6 +1,7 @@
 import { Card, CardContent, CardHeader, CardMedia, Typography } from '@material-ui/core'
 import React from 'react'
 import { Link } from 'react-router-dom'
+import Rating from '../Rating/Rating.js';
 import useStyles from './styles.js';
 
 const Product = (props) => {
@@ -19,9 +20,8 @@ const Product = (props) => {
                 <Typography variant='body1' component={Link} to={`/product/${product._id}`}>
                     {product.name}
                 </Typography>
-                <Typography variant='body2'>
-                    {product.rating} from {product.numReviews} reviews
-                </Typography>
+
+                <Rating value={product.rating} text={`${product.numReviews} reviews`} />
 
                 <Typography variant='h6'>
                     ${product.price}
