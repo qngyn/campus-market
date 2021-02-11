@@ -1,9 +1,19 @@
-import { Container, Grid } from '@material-ui/core';
-import React from 'react';
+import { Grid } from '@material-ui/core';
+import React, { useEffect, useState } from 'react';
 import Product from '../../components/Product/Product';
-import products from '../../products';
+import axios from 'axios';
 
 const HomePage = () => {
+    const [products, setProducts] = useState([]);
+
+    useEffect(() => {
+        const fetchProducts = async () => {
+            const { data } = await axios.get('/api/products');
+            setProducts(data);
+        }
+        fetchProducts()
+    }, []);
+
     return (
         <>
             <h1>Latest Products</h1>
