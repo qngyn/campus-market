@@ -1,27 +1,30 @@
 import { Button, Divider, Grid, List, ListItem, Typography } from '@material-ui/core';
-import React, { useEffect, useState } from 'react';
-import axios from 'axios';
+import React, { useEffect } from 'react';
+import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
+import { getProductDetails } from '../../actions/productActions';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import MessageBox from '../../components/MessageBox/MessageBox';
 import Rating from '../../components/Rating/Rating';
 import useStyles from './styles.js';
 
 const ProductPage = (props) => {
     const classes = useStyles();
-    const [product, setProduct] = useState({});
+    const dispatch = useDispatch();
+
+    const productDetails = useSelector(state => state.productDetails);
+    const { loading, error, product } = productDetails;
 
     useEffect(() => {
-        const fetchProduct = async () => {
-            const { data } = await axios.get(`/api/products/${props.match.params.id}`);
-            setProduct(data);
-        }
-        fetchProduct();
-    }, []);
+        dispatch(getProductDetails(props.match.params.id));
+    }, [dispatch]);
 
     return (
         <>
             <Button component={Link} to='/'>
                 Go Back
             </Button>
+            {loading ? <LoadingSpinner /> : error ? <MessageBox severity='error' text={error} /> : (
             <Grid container spacing={2}>
                 <Grid item md={6}>
                     <img src={product.image} alt={product.name} className={classes.image} />
@@ -91,6 +94,7 @@ const ProductPage = (props) => {
                     </List>
                 </Grid>
             </Grid>
+            )}
         </>
     )
 }
