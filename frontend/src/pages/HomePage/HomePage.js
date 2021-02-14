@@ -3,6 +3,8 @@ import { useDispatch, useSelector } from 'react-redux';
 import React, { useEffect, useState } from 'react';
 import Product from '../../components/Product/Product';
 import { listProducts } from '../../actions/productActions';
+import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
+import MessageBox from '../../components/MessageBox/MessageBox';
 
 const HomePage = () => {
     const dispatch = useDispatch();
@@ -16,7 +18,7 @@ const HomePage = () => {
     return (
         <>
             <h1>Latest Products</h1>
-            {loading ? <h2>Loading...</h2> : error ? <h3>{error}</h3> : <Grid container spacing={2}>
+            {loading ? <LoadingSpinner /> : error ? <MessageBox severity='error' text={error}/> : <Grid container spacing={2}>
                 {products.map((product) => (
                     <Grid item key={product._id} xs={12} sm={4} md={3}>
                         <Product product={product} key={product._id} />
