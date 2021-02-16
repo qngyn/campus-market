@@ -30,7 +30,7 @@ const ProductPage = (props) => {
             <Button component={Link} to='/'>
                 Go Back
             </Button>
-            {loading ? <LoadingSpinner /> : error ? <MessageBox severity='error' text={error} /> : (
+            {loading ? <LoadingSpinner /> : error ? <MessageBox severity='error'>{error}</MessageBox> : (
                 <Grid container spacing={2}>
                     <Grid item md={6}>
                         <img src={product.image} alt={product.name} className={classes.image} />
@@ -116,14 +116,6 @@ const ProductPage = (props) => {
                                                             <MenuItem key={count + 1} value={count + 1}>{count + 1}</MenuItem>
                                                         ))
                                                     }
-                                                    {/*
-                                                    <MenuItem value="">
-                                                        <em>None</em>
-                                                    </MenuItem>
-                                                    <MenuItem value={10}>Ten</MenuItem>
-                                                    <MenuItem value={20}>Twenty</MenuItem>
-                                                    <MenuItem value={30}>Thirty</MenuItem>
-                                                    */}
                                                 </Select>
                                             </FormControl>
                                         </Grid>

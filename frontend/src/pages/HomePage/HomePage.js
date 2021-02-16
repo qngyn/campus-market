@@ -18,7 +18,7 @@ const HomePage = () => {
     return (
         <>
             <h1>Latest Products</h1>
-            {loading ? <LoadingSpinner /> : error ? <MessageBox severity='error' text={error}/> : <Grid container spacing={2}>
+            {loading ? <LoadingSpinner /> : error ? <MessageBox severity='error'>{error}</MessageBox> : <Grid container spacing={2}>
                 {products.map((product) => (
                     <Grid item key={product._id} xs={12} sm={4} md={3}>
                         <Product product={product} key={product._id} />

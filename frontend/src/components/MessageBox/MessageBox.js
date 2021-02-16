@@ -2,9 +2,9 @@ import React from 'react';
 import Alert from '@material-ui/lab/Alert';
 
 const MessageBox = (props) => {
-    const { severity, text } =  props;
+    const { severity, children } =  props;
     return (
-        <Alert severity={severity}>{text}</Alert>
+        <Alert severity={severity}>{children}</Alert>
     )
 }
 
