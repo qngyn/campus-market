@@ -1,11 +1,12 @@
 import { Card, Divider, FormControl, Grid, IconButton, InputLabel, List, ListItem, MenuItem, Select, Typography, Button } from '@material-ui/core';
-import React, { useEffect } from 'react';
+import React, { Fragment, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { addToCart } from '../../actions/cartActions';
+import { addToCart, removeFromCart } from '../../actions/cartActions';
 import MessageBox from '../../components/MessageBox/MessageBox';
 import DeleteIcon from '@material-ui/icons/Delete';
 import { Link } from 'react-router-dom';
-import useStyles from './styles.js'
+import useStyles from './styles.js';
+
 const CartPage = (props) => {
     const classes = useStyles();
     const productId = props.match.params.id;
@@ -20,9 +21,9 @@ const CartPage = (props) => {
             dispatch(addToCart(productId, quantity));
         }
     }, []);
-
+  
     const removeFromCartHandler = (id) => {
-        console.log('remove');
+        dispatch(removeFromCart(id));
     }
 
     const checkoutHandler = () => {
@@ -35,7 +36,7 @@ const CartPage = (props) => {
                 {cartItems.length === 0 ? <MessageBox>Your cart is empty <Link to='/'>Go Back</Link></MessageBox> : (
                     <List>
                         {cartItems.map((item, index) => (
-                            <>
+                            <Fragment key={item.name}>
                                 <ListItem>
                                     <Grid container spacing={2}>
                                         <Grid item md={2}>
@@ -78,7 +79,7 @@ const CartPage = (props) => {
                                     </Grid>
                                 </ListItem>
                                 {index !== cartItems.length - 1 && <Divider variant="inset" component="li" />}
-                            </>
+                            </Fragment>
 
                         ))}
                     </List>
