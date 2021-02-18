@@ -3,12 +3,16 @@ import dotenv from 'dotenv';
 import { notFoundHandler, errorHandler } from './middleware/errorMiddleware.js';
 import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
+import userRoutes from './routes/userRoutes.js';
 
 dotenv.config(); 
 
 connectDB(); 
 
 const app = express(); 
+
+// middleware to parse json (from req.body)
+app.use(express.json());
 
 app.use((req, res, next) => {
     console.log(req.originalUrl);
@@ -19,7 +23,10 @@ app.get('/', (req, res) => {
     res.send('API is running');
 });
 
+/* mount the available API routes */
 app.use('/api/products', productRoutes);
+app.use('/api/users', userRoutes);
+
 
 /* handling 404 error */
 app.use(notFoundHandler)
