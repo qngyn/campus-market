@@ -18,10 +18,31 @@ export const authenticateUser = expressAsyncHandler(async (req, res) => {
             name: user.name, 
             email: user.email, 
             isAdmin: user.isAdmin, 
-            token: generateToken(user._id) // todo - generate JSON Web Token
-        })
+            token: generateToken(user._id)
+        });
     } else {
         res.status(401);
         throw new Error('Invalid email or password');
+    }
+});
+
+/* 
+@description Get the logged in user profile
+@route GET /api/users/profile
+@access private
+*/
+export const getUserProfile = expressAsyncHandler(async (req, res) => {
+    const user = await User.findById(req.user._id);
+
+    if (user) {
+        res.json({
+            _id: user._id,
+            name: user.name, 
+            email: user.email, 
+            isAdmin: user.isAdmin
+        });
+    } else {
+        res.status(404);
+        throw new Error('User not found')
     }
 });
