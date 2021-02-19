@@ -1,9 +1,10 @@
 import express from 'express';
-import { authenticateUser, getUserProfile } from '../controllers/userController.js';
+import { authenticateUser, getUserProfile, registerUser } from '../controllers/userController.js';
 import { authenticateProtectedRoute } from '../middleware/authMiddleware.js';
 
-const router = express.Router();
+const router = express.Router(); // base url "/api/users"
 
+router.route('/').post(registerUser);
 router.post('/login', authenticateUser); 
 
 /* protected routes */ 
