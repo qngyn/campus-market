@@ -5,6 +5,10 @@ export default makeStyles({
         margin: '0.1rem'
     }, 
     rating: {
-        margin: '10px 0'
+        margin: '10px 0',
+        display: 'flex'
+    },
+    reviewText: {
+        marginLeft: 5
     }
 });

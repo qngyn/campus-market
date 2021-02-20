@@ -38,7 +38,7 @@ const ProductPage = (props) => {
                     <Grid item md={3}>
                         <List>
                             <ListItem>
-                                <Typography variant='h5'>{product.name}</Typography>
+                                <Typography variant='h5' style={{fontFamily: 'Montserrat'}}>{product.name}</Typography>
                             </ListItem>
                             <Divider />
                             <ListItem>

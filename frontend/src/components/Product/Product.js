@@ -1,6 +1,6 @@
 import { Card, CardContent, CardMedia, Typography } from '@material-ui/core'
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from 'react-router-dom';
 import Rating from '../Rating/Rating.js';
 import useStyles from './styles.js';
 
@@ -17,7 +17,7 @@ const Product = (props) => {
                 />
             </Link>
             <CardContent>
-                <Typography variant='body1' component={Link} to={`/product/${product._id}`}>
+                <Typography variant='body1' component={Link} to={`/product/${product._id}`} className={classes.cartTitleTypography}>
                     {product.name}
                 </Typography>
 

@@ -7,9 +7,18 @@ import ProductPage from './pages/ProductPage/ProductPage';
 import { Container } from '@material-ui/core';
 import CartPage from './pages/CartPage/CartPage';
 
+import {
+  ThemeProvider as MuiThemeProvider,
+  createMuiTheme,
+} from "@material-ui/core/styles";
+
+import themeUtil from "./util/theme.js";
+
+const muiTheme = createMuiTheme(themeUtil);
+
 const App = () => {
   return (
-    <>
+    <><MuiThemeProvider theme={muiTheme}>
       <Router>
         <Header />
         <main>
@@ -23,6 +32,7 @@ const App = () => {
         </main>
         <Footer />
       </Router>
+    </MuiThemeProvider>
     </>
   );
 }

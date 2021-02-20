@@ -17,7 +17,7 @@ userSchema.methods.matchPassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);
 }
 
-// before saving
+// before saving user to db, encrypt the password
 userSchema.pre('save', async function(next) {
     // if password is modifed => move on - don't need to generate a new hash
     if (!this.isModified('password')) { 
