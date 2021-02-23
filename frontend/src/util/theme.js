@@ -17,8 +17,10 @@ export default {
     },
     // shadows: new Array(25).fill('none'),
     spreadThis: { 
-      cartTitleTypography: {
-        fontFamily: 'Montserrat',       
+      titleTypography: {
+        fontFamily: 'Montserrat', 
+        margin: "20px 0",
+        fontWeight: 300      
       }
     }
 }

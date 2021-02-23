@@ -17,7 +17,7 @@ const Product = (props) => {
                 />
             </Link>
             <CardContent>
-                <Typography variant='body1' component={Link} to={`/product/${product._id}`} className={classes.cartTitleTypography}>
+                <Typography variant='body1' component={Link} to={`/product/${product._id}`} className={classes.titleTypography}>
                     {product.name}
                 </Typography>
 

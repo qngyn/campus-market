@@ -13,6 +13,7 @@ import {
 } from "@material-ui/core/styles";
 
 import themeUtil from "./util/theme.js";
+import LoginPage from './pages/LoginPage/LoginPage';
 
 const muiTheme = createMuiTheme(themeUtil);
 
@@ -25,6 +26,7 @@ const App = () => {
           <Container>
             <Switch>
               <Route exact path='/' component={HomePage} />
+              <Route exact path='/login' component={LoginPage} />
               <Route exact path='/product/:id' component={ProductPage} />
               <Route exact path='/cart/:id?' component={CartPage} /> {/* id in url is optional */}
             </Switch>

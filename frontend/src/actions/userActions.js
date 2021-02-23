@@ -20,7 +20,7 @@ export const login = (email, password) => async (dispatch) => {
             payload: data
         });
 
-        localStorage.setItem('userInfo', JSON(stringify(data))); // TODO: implement get current authenticated user
+        localStorage.setItem('userInfo', JSON.stringify(data)); // TODO: implement get current authenticated user
     } catch (error) {
         dispatch({
             type: USER_LOGIN_FAIL,

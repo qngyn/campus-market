@@ -32,7 +32,7 @@ const CartPage = (props) => {
     return (
         <Grid container spacing={2}>
             <Grid item md={8}>
-                <h1>Shopping cart</h1>
+                <Typography variant='h4' className={classes.titleTypography}>Shopping cart</Typography>
                 {cartItems.length === 0 ? <MessageBox>Your cart is empty <Link to='/'>Go Back</Link></MessageBox> : (
                     <List>
                         {cartItems.map((item, index) => (

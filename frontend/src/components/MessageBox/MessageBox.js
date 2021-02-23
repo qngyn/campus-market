@@ -1,10 +1,12 @@
 import React from 'react';
 import Alert from '@material-ui/lab/Alert';
+import useStyles from './styles.js';
 
 const MessageBox = (props) => {
-    const { severity, children } =  props;
+    const classes = useStyles();
+    const { severity, children, className} =  props;
     return (
-        <Alert severity={severity}>{children}</Alert>
+        <Alert severity={severity} className={className}>{children}</Alert>
     )
 }
 
