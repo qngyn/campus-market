@@ -1,5 +1,7 @@
 import { AppBar, Badge, Container, IconButton, Menu, MenuItem, Toolbar, Typography } from '@material-ui/core';
 import { Link } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+
 import React, { useState } from 'react';
 import useStyles from './styles.js';
 import InputBase from '@material-ui/core/InputBase';
@@ -8,11 +10,16 @@ import SearchIcon from '@material-ui/icons/Search';
 import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import CartIcon from '@material-ui/icons/AddShoppingCart';
+import { logout } from '../../actions/userActions.js';
 
 const Navbar = () => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+
+    const dispatch = useDispatch();
+    const userLogin = useSelector((state) => state.userLogin);
+    const { userInfo } = userLogin;
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
@@ -33,6 +40,10 @@ const Navbar = () => {
     const handleMobileMenuOpen = (event) => {
         setMobileMoreAnchorEl(event.currentTarget);
     };
+    const logoutHandler = () => {
+        handleMenuClose();
+        dispatch(logout());
+    }
 
     const menuId = 'primary-search-account-menu';
     const renderMenu = (
@@ -45,9 +56,10 @@ const Navbar = () => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose} component={Link} to='/login'>Log In</MenuItem>
-            <MenuItem onClick={handleMenuClose} component={Link} to='/signup'>Sign Up</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to='/profile'>Log In</MenuItem>
+            <MenuItem onClick={logoutHandler}>Logout</MenuItem>
         </Menu>
+
     );
 
     const mobileMenuId = 'primary-search-account-menu-mobile';
@@ -77,17 +89,39 @@ const Navbar = () => {
                 </IconButton>
                 <p>Notifications</p>
             </MenuItem>
-            <MenuItem onClick={handleProfileMenuOpen}>
-                <IconButton
-                    aria-label="account of current user"
-                    aria-controls="primary-search-account-menu"
-                    aria-haspopup="true"
-                    color="inherit"
-                >
-                    <AccountCircle />
-                </IconButton>
-                <p>Profile</p>
-            </MenuItem>
+
+            {userInfo ? (
+                <MenuItem component={Link} to='/profile' onClick={handleMobileMenuClose}>
+                    <IconButton
+                        aria-label="account of current user"
+                        aria-controls="primary-search-account-menu"
+                        aria-haspopup="true"
+                        color="inherit"
+                    >
+                        <AccountCircle />
+                    </IconButton>
+                    <Typography variant='body1'>
+                        Profile
+                       </Typography>
+                </MenuItem>
+            ) : (
+                    <MenuItem component={Link} to='/login' onClick={handleMobileMenuClose}>
+                        <IconButton
+                            aria-label="go to sign in"
+                            aria-controls="primary-search-signin-menu"
+                            aria-haspopup="true"
+                            color="inherit"
+                        >
+                            <AccountCircle />
+                        </IconButton>
+                        <Typography variant='body1'>
+                            Sign In
+                        </Typography>
+                    </MenuItem>
+
+                )}
+
+
         </Menu>
     );
 
@@ -130,7 +164,8 @@ const Navbar = () => {
                                     Notifications
                                 </Typography>
                             </IconButton>
-                            <IconButton
+
+                            {userInfo ? <IconButton
                                 edge="end"
                                 aria-label="account of current user"
                                 aria-controls={menuId}
@@ -138,11 +173,26 @@ const Navbar = () => {
                                 onClick={handleProfileMenuOpen}
                                 color="inherit"
                             >
-                                <AccountCircle className={classes.badgeDesktop}/>
+                                <AccountCircle className={classes.badgeDesktop} />
                                 <Typography variant='body1'>
-                                    Profile
+                                    {userInfo.name}
                                 </Typography>
-                            </IconButton>
+                            </IconButton> : <IconButton
+                                component={Link}
+                                to='/login'
+                                edge="end"
+                                aria-label="account of current user"
+                                aria-controls={menuId}
+                                aria-haspopup="true"
+                                // onClick={handleProfileMenuOpen}
+                                color="inherit"
+                            >
+                                    <AccountCircle className={classes.badgeDesktop} />
+                                    <Typography variant='body1'>
+                                        Sign In
+                                    </Typography>
+                                </IconButton>}
+
                         </div>
                         <div className={classes.sectionMobile}>
                             <IconButton
@@ -160,7 +210,7 @@ const Navbar = () => {
 
             </AppBar>
             {renderMobileMenu}
-            {renderMenu}
+            {userInfo && renderMenu}
         </div>
     )
 }
