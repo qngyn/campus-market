@@ -56,7 +56,7 @@ const Navbar = () => {
             open={isMenuOpen}
             onClose={handleMenuClose}
         >
-            <MenuItem onClick={handleMenuClose} component={Link} to='/profile'>Log In</MenuItem>
+            <MenuItem onClick={handleMenuClose} component={Link} to='/profile'>Profile</MenuItem>
             <MenuItem onClick={logoutHandler}>Logout</MenuItem>
         </Menu>
 
