@@ -1,8 +1,7 @@
-import { Button, Container, CssBaseline, FormControlLabel, Grid, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, TextField, Typography } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
-import { Link } from 'react-router-dom';
-import { getUserDetails, register } from '../../actions/userActions';
+import { getUserDetails, resetUpdateUserDetails, updateUserDetails } from '../../actions/userActions';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import MessageBox from '../../components/MessageBox/MessageBox';
 import useStyles from './styles.js';
@@ -19,32 +18,35 @@ const ProfilePage = (props) => {
     const dispatch = useDispatch();
 
     const userDetails = useSelector((state) => state.userDetails);
-    const { loading, error, user } = userDetails;
+    const { loading, user } = userDetails;
 
     const userLogin = useSelector((state) => state.userLogin);
     const { userInfo } = userLogin;
 
+    const userUpdateProfile = useSelector((state) => state.userUpdateProfile);
+    const { success } = userUpdateProfile;
 
 
     useEffect(() => {
         if (!userInfo) {
             props.history.push('/login');
         } else {
-            if (!user.name) {
+            if (!user.name || success) {
                 dispatch(getUserDetails('profile'));
+                dispatch(resetUpdateUserDetails());
             } else {
                 setName(user.name);
                 setEmail(user.email);
             }
         }
-    }, [dispatch, props.history, userInfo, user]);
+    }, [dispatch, props.history, userInfo, user, success]);
 
     const submitHandler = (e) => {
         e.preventDefault();
         if (password !== confirmPassword) {
             setMessage("Confirm password must match");
         } else {
-            // dispatch updateProfile
+            dispatch(updateUserDetails({ id: user._id, name, email, password }));
         }
     }
 
@@ -55,7 +57,7 @@ const ProfilePage = (props) => {
                     MY PROFILE
                 </Typography>
                 {message && <MessageBox severity='error' className={classes.messageBox}>{message}</MessageBox>}
-                {error && <MessageBox severity='error' className={classes.messageBox}>{error}</MessageBox>}
+                {success && <MessageBox severity='info' className={classes.messageBox}>Profile Updated Successfully</MessageBox>}
                 {loading && <LoadingSpinner />}
 
                 <form className={classes.form} onSubmit={submitHandler} noValidate>
