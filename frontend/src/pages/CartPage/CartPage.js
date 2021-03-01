@@ -27,7 +27,7 @@ const CartPage = (props) => {
     }
 
     const checkoutHandler = () => {
-        props.history.pushState('/login?redirect=shipping');
+        props.history.push('/login?redirect=shipping');
     }
     return (
         <Grid container spacing={2}>
