@@ -4,6 +4,7 @@ import { Button, Container, CssBaseline, TextField, Typography } from '@material
 import useStyles from './styles.js';
 import { useDispatch, useSelector } from 'react-redux';
 import { saveShippingAddress } from '../../actions/cartActions.js';
+import CheckoutProgress from '../../components/CheckoutProgress/CheckoutProgress.js';
 
 const ShippingPage = (props) => {
     const classes = useStyles();
@@ -23,9 +24,10 @@ const ShippingPage = (props) => {
         props.history.push('/payment');
     }
     return (
-        <Container component="main" maxWidth="xs">
+        <Container component="main" maxWidth="sm">
             <CssBaseline />
             <div className={classes.paper}>
+                <CheckoutProgress step={1} /> {/* shipping is the 2nd step in the progess - count from 0 */}
                 <Typography component="h1" variant="h4" className={classes.titleTypography} >
                     Shipping Details
                 </Typography>
