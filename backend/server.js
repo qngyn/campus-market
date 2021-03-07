@@ -4,6 +4,7 @@ import { notFoundHandler, errorHandler } from './middleware/errorMiddleware.js';
 import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
 import userRoutes from './routes/userRoutes.js';
+import orderRoutes from './routes/orderRoutes.js';
 
 dotenv.config(); 
 
@@ -26,7 +27,7 @@ app.get('/', (req, res) => {
 /* mount the available API routes */
 app.use('/api/products', productRoutes);
 app.use('/api/users', userRoutes);
-
+app.use('/api/orders', orderRoutes);
 
 /* handling 404 error */
 app.use(notFoundHandler)
