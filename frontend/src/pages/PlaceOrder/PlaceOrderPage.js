@@ -1,7 +1,7 @@
 import React from 'react'
 import { useSelector } from 'react-redux';
 import CheckoutProgress from '../../components/CheckoutProgress/CheckoutProgress.js';
-import { Button, Card, CardContent, Divider, Grid, List, ListItem, Typography } from '@material-ui/core';
+import { Button, Card, CardContent, Container, CssBaseline, Divider, Grid, List, ListItem, Typography } from '@material-ui/core';
 import MessageBox from '../../components/MessageBox/MessageBox.js';
 import { Link } from 'react-router-dom';
 import useStyles from './styles.js';
@@ -9,7 +9,7 @@ import useStyles from './styles.js';
 const PlaceOrderPage = () => {
     const classes = useStyles();
     const cart = useSelector(state => state.cart);
-    
+
     // insist 2 decimal places (ex: $15.20)
     const addDecimals = (num) => {
         return (Math.round(num * 100) / 100).toFixed(2);
@@ -22,13 +22,15 @@ const PlaceOrderPage = () => {
 
     cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
     cart.totalPrice = (Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)).toFixed(2);
-   
+
     const placeOrderHandler = () => {
 
     };
 
     return (
-        <div>
+        <Container component="main" maxWidth="lg">
+            <CssBaseline />
+            <div className={classes.paper}>
             <CheckoutProgress step={3} />
             <Grid container spacing={4}>
                 <Grid item md={8}>
@@ -38,7 +40,7 @@ const PlaceOrderPage = () => {
                             <Typography variant='body1' style={{ fontFamily: 'Montserrat' }}>
                                 <strong>Address: </strong>
                                 <br />
-                                {cart.shippingAddress}
+                                {cart.shippingAddress.address}, {cart.shippingAddress.city}, {cart.shippingAddress.postalCode}, {cart.shippingAddress.country}
                             </Typography>
 
                         </ListItem>
@@ -171,7 +173,8 @@ const PlaceOrderPage = () => {
                     </Card>
                 </Grid>
             </Grid>
-        </div>
+            </div>
+        </Container>
     )
 }
 
