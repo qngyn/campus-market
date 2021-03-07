@@ -1,5 +1,5 @@
 import expressAsyncHandler from 'express-async-handler';
-import Product from '../models/productModel.js';
+import Order from '../models/orderModel.js';
 
 /* 
 @description Create a new order
@@ -25,7 +25,7 @@ export const addOrderItems = expressAsyncHandler(async (req, res) => {
             orderItems,
             user: req.user._id,
             shippingAddress,
-            paymentMethod,
+            payment: paymentMethod,
             itemsPrice,
             taxPrice,
             shippingPrice,
