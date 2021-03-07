@@ -17,6 +17,7 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import RegisterPage from './pages/RegisterPage/RegisterPage';
 import ProfilePage from './pages/ProfilePage/ProfilePage';
 import ShippingPage from './pages/ShippingPage/ShippingPage';
+import PaymentPage from './pages/PaymentPage/PaymentPage';
 
 const muiTheme = createMuiTheme(themeUtil);
 
@@ -35,7 +36,7 @@ const App = () => {
               <Route exact path='/product/:id' component={ProductPage} />
               <Route exact path='/cart/:id?' component={CartPage} /> {/* id in url is optional */}
               <Route exact path='/shipping' component={ShippingPage} />
-
+              <Route exact path='/payment' component={PaymentPage} />
             </Switch>
           </Container>
         </main>
