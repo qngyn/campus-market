@@ -20,4 +20,7 @@ export default makeStyles((theme) => ({
         color: 'white',
         backgroundColor: 'black'
     },
+    messageBox: {
+        width: '100%'
+    }
 }));

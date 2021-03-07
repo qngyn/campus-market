@@ -1,13 +1,17 @@
-import React from 'react'
-import { useSelector } from 'react-redux';
+import React, { useEffect } from 'react'
+import { useDispatch, useSelector } from 'react-redux';
 import CheckoutProgress from '../../components/CheckoutProgress/CheckoutProgress.js';
 import { Button, Card, CardContent, Container, CssBaseline, Divider, Grid, List, ListItem, Typography } from '@material-ui/core';
 import MessageBox from '../../components/MessageBox/MessageBox.js';
 import { Link } from 'react-router-dom';
 import useStyles from './styles.js';
+import { createOrder } from '../../actions/orderActions.js';
 
-const PlaceOrderPage = () => {
+const PlaceOrderPage = (props) => {
     const classes = useStyles();
+    
+    const dispatch = useDispatch(); 
+    
     const cart = useSelector(state => state.cart);
 
     // insist 2 decimal places (ex: $15.20)
@@ -23,8 +27,24 @@ const PlaceOrderPage = () => {
     cart.taxPrice = addDecimals(Number((0.15 * cart.itemsPrice).toFixed(2)));
     cart.totalPrice = (Number(cart.itemsPrice) + Number(cart.shippingPrice) + Number(cart.taxPrice)).toFixed(2);
 
-    const placeOrderHandler = () => {
+    const orderCreate = useSelector(state => state.orderCreate);
+    const { order, success, error} = orderCreate; 
 
+    useEffect(() => {
+        if (success) {
+            props.history.push(`/order/${order._id}`);
+        }
+    }, [props.history, success])
+    const placeOrderHandler = () => {
+        dispatch(createOrder({
+            orderItems: cart.cartItems,
+            shippingAddress: cart.shippingAddress, 
+            paymentMethod: cart.paymentMethod, 
+            itemsPrice: cart.itemsPrice, 
+            shippingPrice: cart.shippingPrice, 
+            taxPrice: cart.taxPrice,
+            totalPrice: cart.totalPrice
+        }));
     };
 
     return (
@@ -157,7 +177,9 @@ const PlaceOrderPage = () => {
                                     </Grid>
                                 </ListItem>
                                 <Divider />
-
+                                {error && <ListItem>
+                                    <MessageBox severity='error' className={classes.messageBox}>{error}</MessageBox>
+                                </ListItem>}
                                 <ListItem>
                                     <Button
                                         onClick={placeOrderHandler}
