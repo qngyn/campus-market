@@ -44,7 +44,7 @@ export const addOrderItems = expressAsyncHandler(async (req, res) => {
 @access private
 */
 export const getOrderById = expressAsyncHandler(async (req, res) => {
-    const order = await (await Order.findById(req.params.id)).populate('user', 'name email'); // get user name and email associated with the order
+    const order = await Order.findById(req.params.id).populate('user', 'name email'); // get user name and email associated with the order
 
     if (order) {
         res.json(order)
