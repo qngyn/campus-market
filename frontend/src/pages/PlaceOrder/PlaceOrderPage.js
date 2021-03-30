@@ -187,7 +187,7 @@ const PlaceOrderPage = (props) => {
                                         className={classes.placeOrderButton}
                                         disabled={cart.cartItems === 0}
                                     >
-                                        Add to cart
+                                        Place Order
                                     </Button>
                                 </ListItem>
                             </List>

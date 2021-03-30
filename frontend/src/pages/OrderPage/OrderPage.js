@@ -1,15 +1,19 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner.js';
-import { Button, Card, CardContent, Container, CssBaseline, Divider, Grid, List, ListItem, Typography } from '@material-ui/core';
+import { Card, CardContent, CircularProgress, Divider, Grid, List, ListItem, Typography } from '@material-ui/core';
 import MessageBox from '../../components/MessageBox/MessageBox.js';
+import { PayPalButton } from 'react-paypal-button-v2';
 import { Link } from 'react-router-dom';
 import useStyles from './styles.js';
-import { getOrderDetails } from '../../actions/orderActions.js';
+import { getOrderDetails, payOrder } from '../../actions/orderActions.js';
+import axios from 'axios';
+import { ORDER_PAY_RESET } from '../../contstants/orderConstants.js';
 
 const OrderPage = (props) => {
     const classes = useStyles();
 
+    const [payPalSdkReady, setPayPalSdkReady] = useState(false);
     const dispatch = useDispatch();
 
     const orderId = props.match.params.id;
@@ -17,12 +21,46 @@ const OrderPage = (props) => {
     const orderDetails = useSelector(state => state.orderDetails);
     const { order, loading, error } = orderDetails;
 
+    const orderPay = useSelector(state => state.orderPay);
+    const { loading: loadingPay, success: successPay } = orderPay; // rename loading to loadingPay and success to successPay
+    
+    
     useEffect(() => {
-        if (!order || order._id !== orderId) {
-            dispatch(getOrderDetails(orderId));
+        const addPayPalScript = async () => {
+            const { data : clientId } = await axios.get('/api/config/paypal');
+            
+            /* dynamically add PayPal SDK Script */
+            const script = document.createElement('script');
+            script.type = '/text/javascript';
+            script.src = `https://www.paypal.com/sdk/js?client-id=${clientId}`;
+            console.log("clientId: ", clientId);
+            // script.async = true;
+            script.onload = () => {
+                console.log("check point onload script")
+                setPayPalSdkReady(true);
+            }
+            script.onload()
+            document.body.appendChild(script);
         }
-    }, [dispatch, order, orderId]);
+        // addPayPalScript()    
+        if (!order || order._id !== orderId || successPay) {
+            dispatch({ type: ORDER_PAY_RESET})
+            dispatch(getOrderDetails(orderId));
+        } else if (!order.isPaid) {
+            // if order is not paid => add the paypal sdk script
+            console.log("window: ", window)
+            if (!window.paypal) {
+                addPayPalScript(); 
+            } else {
+                setPayPalSdkReady(true);
+            }
+        }
+    }, [dispatch, order, orderId, successPay]);
 
+    const successPaymentHandler = (paymentResult) => {
+        console.log(paymentResult)
+        dispatch(payOrder(orderId, paymentResult));
+    }
     return loading ? <LoadingSpinner /> : error ? <MessageBox severity='error'>{error}</MessageBox> : (
         <>
             <Typography component="h1" variant="h4" className={classes.titleTypography} >
@@ -169,6 +207,18 @@ const OrderPage = (props) => {
                                         </Grid>
                                     </Grid>
                                 </ListItem>
+
+                                {!order.isPaid && (
+                                    <ListItem>
+                                        {loadingPay && <CircularProgress />}
+                                        {!payPalSdkReady ? <CircularProgress/> : (
+                                            <PayPalButton 
+                                                amount={order.totalPrice} 
+                                                onSuccess={successPaymentHandler}
+                                            />
+                                        )}
+                                    </ListItem>
+                                )}
                                 <Divider />
 
                             </List>
