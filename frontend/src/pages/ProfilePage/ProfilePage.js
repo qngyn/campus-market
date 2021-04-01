@@ -1,10 +1,11 @@
-import { Button, Grid, Paper, Table, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, TextField, Typography } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { getLoggedInUserOrders } from '../../actions/orderActions';
 import { getUserDetails, resetUpdateUserDetails, updateUserDetails } from '../../actions/userActions';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import MessageBox from '../../components/MessageBox/MessageBox';
+import MyOrderTableRow from '../../components/MyOrderTableRow/MyOrderTableRow';
 import useStyles from './styles.js';
 
 const ProfilePage = (props) => {
@@ -15,6 +16,18 @@ const ProfilePage = (props) => {
     const [password, setPassword] = useState('');
     const [confirmPassword, setConfirmPassword] = useState('');
     const [message, setMessage] = useState(null);
+
+    const [page, setPage] = React.useState(0);
+    const [rowsPerPage, setRowsPerPage] = React.useState(10);
+  
+    const handleChangePage = (event, newPage) => {
+      setPage(newPage);
+    };
+  
+    const handleChangeRowsPerPage = (event) => {
+      setRowsPerPage(+event.target.value);
+      setPage(0);
+    };
 
     const dispatch = useDispatch();
 
@@ -140,27 +153,39 @@ const ProfilePage = (props) => {
                     MY ORDERS
                 </Typography>
                 {loadingOrdersUser ? <LoadingSpinner /> : errorOrdersUser ? <MessageBox severity='error'>{errorOrdersUser}</MessageBox> : (
-                    <TableContainer component={Paper}>
-                        <Table aria-label="collapsible table">
-                            <TableHead>
-                                <TableRow>
-                                    <TableCell />
-                                    <TableCell>Order</TableCell>
-                                    <TableCell align="right">Date</TableCell>
-                                    <TableCell align="right">Sold By</TableCell>
-                                    <TableCell align="right">Paid</TableCell>
-                                    <TableCell align="right">Delivered</TableCell>
-                                </TableRow>
-                            </TableHead>
-                            {/*
-                            <TableBody>
-                                {rows.map((row) => (
-                                    <Row key={row.name} row={row} />
-                                ))}
-                            </TableBody>
-                            */}
-                        </Table>
-                    </TableContainer>
+                    <Paper>
+                        <TableContainer component={Paper} className={classes.container}>
+                            <Table stickyHeader aria-label="collapsible table">
+                                <TableHead>
+                                    <TableRow>
+                                        <TableCell />
+                                        <TableCell>Order</TableCell>
+                                        <TableCell align="left">Total</TableCell>
+                                        <TableCell align="left">Date</TableCell>
+                                        <TableCell align="left">Paid</TableCell>
+                                        <TableCell align="left">Delivered</TableCell>
+                                    </TableRow>
+                                </TableHead>
+
+                                <TableBody>
+                                    {orders.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((order) => (
+                                        <MyOrderTableRow key={order.name} order={order} />
+                                    ))}
+                                </TableBody>
+
+                            </Table>
+                        </TableContainer>
+                        <TablePagination
+                            rowsPerPageOptions={[5, 25, 100]}
+                            component="div"
+                            count={orders.length}
+                            rowsPerPage={rowsPerPage}
+                            page={page}
+                            onChangePage={handleChangePage}
+                            onChangeRowsPerPage={handleChangeRowsPerPage}
+                        />
+                    </Paper>
+
                 )}
             </Grid>
         </Grid>
