@@ -1,4 +1,4 @@
-import { ORDER_CREATE_FAIL, ORDER_CREATE_REQUEST, ORDER_CREATE_SUCCESS, ORDER_DETAILS_FAIL, ORDER_DETAILS_REQUEST, ORDER_DETAILS_SUCCESS, ORDER_PAY_FAIL, ORDER_PAY_REQUEST, ORDER_PAY_RESET, ORDER_PAY_SUCCESS } from "../contstants/orderConstants";
+import { ORDER_CREATE_FAIL, ORDER_CREATE_REQUEST, ORDER_CREATE_SUCCESS, ORDER_DETAILS_FAIL, ORDER_DETAILS_REQUEST, ORDER_DETAILS_SUCCESS, ORDER_LOGGED_IN_USER_FAIL, ORDER_LOGGED_IN_USER_REQUEST, ORDER_LOGGED_IN_USER_SUCCESS, ORDER_PAY_FAIL, ORDER_PAY_REQUEST, ORDER_PAY_RESET, ORDER_PAY_SUCCESS } from "../contstants/orderConstants";
 
 export const orderCreateReducer = (state={}, action) => {
     switch(action.type) {
@@ -66,3 +66,25 @@ export const orderPayReducer = (state={ }, action) => {
            return state;
     }
 }
+
+export const orderLoggedUserReducer = (state={ orders: [] }, action) => {
+    switch(action.type) {
+        case ORDER_LOGGED_IN_USER_REQUEST: 
+            return {
+                loading: true
+            };
+        case ORDER_LOGGED_IN_USER_SUCCESS:
+            return {
+                loading: false, 
+                orders: action.payload
+            };
+        case ORDER_LOGGED_IN_USER_FAIL:
+           return {
+               loading: false,
+               error: action.payload
+           };
+        default: 
+           return state;
+    }
+}
+

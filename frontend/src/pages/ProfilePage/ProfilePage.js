@@ -1,6 +1,7 @@
-import { Button, Grid, TextField, Typography } from '@material-ui/core';
+import { Button, Grid, Paper, Table, TableCell, TableContainer, TableHead, TableRow, TextField, Typography } from '@material-ui/core';
 import React, { useState, useEffect } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
+import { getLoggedInUserOrders } from '../../actions/orderActions';
 import { getUserDetails, resetUpdateUserDetails, updateUserDetails } from '../../actions/userActions';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import MessageBox from '../../components/MessageBox/MessageBox';
@@ -27,6 +28,9 @@ const ProfilePage = (props) => {
     const { success } = userUpdateProfile;
 
 
+    const orderLoggedInUser = useSelector((state) => state.orderLoggedInUser);
+    const { loading: loadingOrdersUser, error: errorOrdersUser, orders } = orderLoggedInUser;
+
     useEffect(() => {
         if (!userInfo) {
             props.history.push('/login');
@@ -34,6 +38,7 @@ const ProfilePage = (props) => {
             if (!user.name || success) {
                 dispatch(getUserDetails('profile'));
                 dispatch(resetUpdateUserDetails());
+                dispatch(getLoggedInUserOrders());
             } else {
                 setName(user.name);
                 setEmail(user.email);
@@ -132,8 +137,31 @@ const ProfilePage = (props) => {
             </Grid>
             <Grid item md={9}>
                 <Typography component="h1" variant="h4" className={classes.titleTypography} >
-                    MY ORDER
+                    MY ORDERS
                 </Typography>
+                {loadingOrdersUser ? <LoadingSpinner /> : errorOrdersUser ? <MessageBox severity='error'>{errorOrdersUser}</MessageBox> : (
+                    <TableContainer component={Paper}>
+                        <Table aria-label="collapsible table">
+                            <TableHead>
+                                <TableRow>
+                                    <TableCell />
+                                    <TableCell>Order</TableCell>
+                                    <TableCell align="right">Date</TableCell>
+                                    <TableCell align="right">Sold By</TableCell>
+                                    <TableCell align="right">Paid</TableCell>
+                                    <TableCell align="right">Delivered</TableCell>
+                                </TableRow>
+                            </TableHead>
+                            {/*
+                            <TableBody>
+                                {rows.map((row) => (
+                                    <Row key={row.name} row={row} />
+                                ))}
+                            </TableBody>
+                            */}
+                        </Table>
+                    </TableContainer>
+                )}
             </Grid>
         </Grid>
     )
