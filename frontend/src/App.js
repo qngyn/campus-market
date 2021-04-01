@@ -20,6 +20,7 @@ import ShippingPage from './pages/ShippingPage/ShippingPage';
 import PaymentPage from './pages/PaymentPage/PaymentPage';
 import PlaceOrderPage from './pages/PlaceOrder/PlaceOrderPage';
 import OrderPage from './pages/OrderPage/OrderPage';
+import UsersListPage from './pages/UsersListPage/UsersListPage';
 
 const muiTheme = createMuiTheme(themeUtil);
 
@@ -41,7 +42,7 @@ const App = () => {
               <Route exact path='/payment' component={PaymentPage} />
               <Route exact path='/placeorder' component={PlaceOrderPage} />
               <Route exact path='/order/:id' component={OrderPage} />
-
+              <Route exact path='/admin/allusers' component={UsersListPage} />
             </Switch>
           </Container>
         </main>

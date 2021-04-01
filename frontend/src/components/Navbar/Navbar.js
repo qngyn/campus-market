@@ -11,11 +11,13 @@ import AccountCircle from '@material-ui/icons/AccountCircle';
 import NotificationsIcon from '@material-ui/icons/Notifications';
 import CartIcon from '@material-ui/icons/AddShoppingCart';
 import { logout } from '../../actions/userActions.js';
+import ListRoundedIcon from '@material-ui/icons/ListRounded';
 
 const Navbar = () => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
+    const [adminAnchorEl, setAdminAnchorEl] = useState(null);
 
     const dispatch = useDispatch();
     const userLogin = useSelector((state) => state.userLogin);
@@ -23,6 +25,7 @@ const Navbar = () => {
 
     const isMenuOpen = Boolean(anchorEl);
     const isMobileMenuOpen = Boolean(mobileMoreAnchorEl);
+    const isAdminMenuOpen = Boolean(adminAnchorEl);
 
     const handleProfileMenuOpen = (event) => {
         setAnchorEl(event.currentTarget);
@@ -35,6 +38,14 @@ const Navbar = () => {
     const handleMenuClose = () => {
         setAnchorEl(null);
         handleMobileMenuClose();
+    };
+
+    const handleAdminMenuOpen = (event) => {
+        setAdminAnchorEl(event.currentTarget);
+    };
+    const handleAdminMenuClose = () => {
+        setAdminAnchorEl(null);
+
     };
 
     const handleMobileMenuOpen = (event) => {
@@ -105,21 +116,21 @@ const Navbar = () => {
                        </Typography>
                 </MenuItem>
             ) : (
-                    <MenuItem component={Link} to='/login' onClick={handleMobileMenuClose}>
-                        <IconButton
-                            aria-label="go to sign in"
-                            aria-controls="primary-search-signin-menu"
-                            aria-haspopup="true"
-                            color="inherit"
-                        >
-                            <AccountCircle />
-                        </IconButton>
-                        <Typography variant='body1'>
-                            Sign In
+                <MenuItem component={Link} to='/login' onClick={handleMobileMenuClose}>
+                    <IconButton
+                        aria-label="go to sign in"
+                        aria-controls="primary-search-signin-menu"
+                        aria-haspopup="true"
+                        color="inherit"
+                    >
+                        <AccountCircle />
+                    </IconButton>
+                    <Typography variant='body1'>
+                        Sign In
                         </Typography>
-                    </MenuItem>
+                </MenuItem>
 
-                )}
+            )}
 
 
         </Menu>
@@ -165,6 +176,17 @@ const Navbar = () => {
                                 </Typography>
                             </IconButton>
 
+                            <IconButton aria-label="show admin menu" 
+                                aria-controls="admin-menu"
+                                aria-haspopup="true"
+                                onClick={handleAdminMenuOpen} 
+                                color="inherit">
+                                <ListRoundedIcon style={{marginRight: 5}}/>
+                                <Typography variant='body1'>
+                                    Manage
+                                </Typography>
+                            </IconButton>
+
                             {userInfo ? <IconButton
                                 edge="end"
                                 aria-label="account of current user"
@@ -187,11 +209,11 @@ const Navbar = () => {
                                 // onClick={handleProfileMenuOpen}
                                 color="inherit"
                             >
-                                    <AccountCircle className={classes.badgeDesktop} />
-                                    <Typography variant='body1'>
-                                        Sign In
+                                <AccountCircle className={classes.badgeDesktop} />
+                                <Typography variant='body1'>
+                                    Sign In
                                     </Typography>
-                                </IconButton>}
+                            </IconButton>}
 
                         </div>
                         <div className={classes.sectionMobile}>
@@ -211,6 +233,21 @@ const Navbar = () => {
             </AppBar>
             {renderMobileMenu}
             {userInfo && renderMenu}
+            {userInfo && userInfo.isAdmin && (
+                <Menu
+                    anchorEl={adminAnchorEl}
+                    anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    id="admin-menu"
+                    keepMounted
+                    transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                    open={isAdminMenuOpen}
+                    onClose={handleAdminMenuClose}
+                >
+                    <MenuItem onClick={handleAdminMenuClose} component={Link} to='/admin/allusers'>All Users</MenuItem>
+                    <MenuItem onClick={handleAdminMenuClose} component={Link} to='/admin/allproducts'>All Products</MenuItem>
+                    <MenuItem onClick={handleAdminMenuClose} component={Link} to='/admin/allorders'>All Orders</MenuItem>
+                </Menu>
+            )}
         </div>
     )
 }
