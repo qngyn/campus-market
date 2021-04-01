@@ -176,7 +176,7 @@ const ProfilePage = (props) => {
                             </Table>
                         </TableContainer>
                         <TablePagination
-                            rowsPerPageOptions={[5, 25, 100]}
+                            rowsPerPageOptions={[5, 10, 25]}
                             component="div"
                             count={orders.length}
                             rowsPerPage={rowsPerPage}

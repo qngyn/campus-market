@@ -1,6 +1,6 @@
-import { USER_DETAILS_FAIL, USER_DETAILS_REQUEST, USER_DETAILS_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_UPDATE_PROFILE_FAIL, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_RESET, USER_UPDATE_PROFILE_SUCCESS } from "../contstants/userConstants";
+import { USER_DETAILS_FAIL, USER_DETAILS_REQUEST, USER_DETAILS_RESET, USER_DETAILS_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_UPDATE_PROFILE_FAIL, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_RESET, USER_UPDATE_PROFILE_SUCCESS } from "../contstants/userConstants";
 
-export const userLoginReducer = (state = { }, action) => {
+export const userLoginReducer = (state = {}, action) => {
     switch (action.type) {
         case USER_LOGIN_REQUEST:
             return {
@@ -11,19 +11,19 @@ export const userLoginReducer = (state = { }, action) => {
                 loading: false,
                 userInfo: action.payload
             };
-        case USER_LOGIN_FAIL: 
+        case USER_LOGIN_FAIL:
             return {
                 loading: false,
                 error: action.payload
             };
         case USER_LOGOUT:
-            return { }; 
-        default: 
+            return {};
+        default:
             return state;
     }
 };
 
-export const userRegisterReducer = (state = { }, action) => {
+export const userRegisterReducer = (state = {}, action) => {
     switch (action.type) {
         case USER_REGISTER_REQUEST:
             return {
@@ -34,12 +34,12 @@ export const userRegisterReducer = (state = { }, action) => {
                 loading: false,
                 userInfo: action.payload
             };
-        case USER_REGISTER_FAIL: 
+        case USER_REGISTER_FAIL:
             return {
                 loading: false,
                 error: action.payload
             };
-        default: 
+        default:
             return state;
     }
 };
@@ -56,18 +56,22 @@ export const userDetailsReducer = (state = { user: {} }, action) => {
                 loading: false,
                 user: action.payload
             };
-        case USER_DETAILS_FAIL: 
+        case USER_DETAILS_FAIL:
             return {
                 loading: false,
                 error: action.payload
             };
-        default: 
+        case USER_DETAILS_RESET:
+            return {
+                user: {}
+            };
+        default:
             return state;
     }
 };
 
 export const userUpdateProfileReducer = (state = {}, action) => {
-    switch(action.type) {
+    switch (action.type) {
         case USER_UPDATE_PROFILE_REQUEST:
             return {
                 loading: true,
@@ -75,17 +79,17 @@ export const userUpdateProfileReducer = (state = {}, action) => {
         case USER_UPDATE_PROFILE_SUCCESS:
             return {
                 loading: false,
-                success: true, 
+                success: true,
                 userInfo: action.payload
             };
-        case USER_UPDATE_PROFILE_FAIL: 
+        case USER_UPDATE_PROFILE_FAIL:
             return {
                 loading: false,
                 error: action.payload
             };
-        case USER_UPDATE_PROFILE_RESET: 
+        case USER_UPDATE_PROFILE_RESET:
             return {};
-        default: 
+        default:
             return state;
     }
 }
