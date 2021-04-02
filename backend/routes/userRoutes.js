@@ -1,5 +1,5 @@
 import express from 'express';
-import { authenticateUser, getUserProfile, registerUser, updateUserProfile, getUsers } from '../controllers/userController.js';
+import { authenticateUser, getUserProfile, registerUser, updateUserProfile, getUsers, deleteUser } from '../controllers/userController.js';
 import { authenticateProtectedRoute, authenticateAdmin } from '../middleware/authMiddleware.js';
 
 const router = express.Router(); // base url "/api/users"
@@ -11,5 +11,6 @@ router.post('/login', authenticateUser);
 router.route('/profile')
         .get(authenticateProtectedRoute, getUserProfile)
         .put(authenticateProtectedRoute, updateUserProfile);
- 
+
+router.route('/:id').delete(authenticateProtectedRoute, authenticateAdmin, deleteUser);
 export default router; 

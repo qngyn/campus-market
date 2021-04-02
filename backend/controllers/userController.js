@@ -123,3 +123,20 @@ export const getUsers = expressAsyncHandler(async (req, res) => {
     const users = await User.find({});
     res.json(users)
 });
+
+/* 
+@description Delete a user
+@route DELETE /api/user/:ID
+@access private/admin (i.e only available to admin users)
+*/
+export const deleteUser = expressAsyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+    
+    if (user) {
+        await user.remove()
+        res.json({ message: "User successfully deleted" })
+    } else {
+        res.status(404)
+        throw new Error("User not found")
+    }
+});
