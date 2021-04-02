@@ -13,7 +13,7 @@ import CartIcon from '@material-ui/icons/AddShoppingCart';
 import { logout } from '../../actions/userActions.js';
 import ListRoundedIcon from '@material-ui/icons/ListRounded';
 
-const Navbar = () => {
+const Navbar = (props) => {
     const classes = useStyles();
     const [anchorEl, setAnchorEl] = useState(null);
     const [mobileMoreAnchorEl, setMobileMoreAnchorEl] = useState(null);
@@ -54,6 +54,12 @@ const Navbar = () => {
     const logoutHandler = () => {
         handleMenuClose();
         dispatch(logout());
+        if (userInfo && userInfo.isAdmin) {
+            // redirect to home
+            if (window.location.pathname === '/admin/allusers') {
+                window.location = '/'
+            }
+        }
     }
 
     const menuId = 'primary-search-account-menu';

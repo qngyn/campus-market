@@ -8,7 +8,7 @@ import useStyles from './styles.js';
 import EditRoundedIcon from '@material-ui/icons/EditRounded';
 import DeleteRoundedIcon from '@material-ui/icons/DeleteRounded';
 
-const UsersListPage = () => {
+const UsersListPage = (props) => {
     const classes = useStyles();
     const [page, setPage] = React.useState(0);
     const [rowsPerPage, setRowsPerPage] = React.useState(10);
@@ -27,9 +27,16 @@ const UsersListPage = () => {
     const userList = useSelector(state => state.userList);
     const { loading, error, users } = userList;
 
+    const userLogin = useSelector(state => state.userLogin);
+    const { userInfo } = userLogin; 
+
     useEffect(() => {
+        if (userInfo && userInfo.isAdmin) {
         dispatch(getAllUsers())
-    }, [dispatch])
+        } else {
+            props.history.push('/login')
+        }
+    }, [dispatch, props])
     return (
         <>
             <Typography component="h1" variant="h4" className={classes.titleTypography} >
