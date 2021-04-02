@@ -1,6 +1,7 @@
 import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@material-ui/core';
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
+import { Link } from 'react-router-dom'
 import { deleteUser, getAllUsers } from '../../actions/userActions';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import MessageBox from '../../components/MessageBox/MessageBox';
@@ -39,7 +40,7 @@ const UsersListPage = (props) => {
         } else {
             props.history.push('/login')
         }
-    }, [dispatch, props, successDeleteUser])
+    }, [dispatch, props, successDeleteUser, userInfo])
 
     const deleteUserHandler = (userId) => {
         if (window.confirm("Are you sure you want to delete user")) {
@@ -73,7 +74,7 @@ const UsersListPage = (props) => {
                                             <TableCell align="left">{user.email}</TableCell>
                                             <TableCell align="left">{user.isAdmin ? <MessageBox severity="error">Admin</MessageBox> : <MessageBox severity="info">User</MessageBox>}</TableCell>
                                             <TableCell align="left">
-                                                <IconButton>
+                                                <IconButton component={Link} to={`/admin/user/${user._id}/edit`}>
                                                     <EditRoundedIcon/>
                                                 </IconButton>
                                                 <IconButton onClick={() => deleteUserHandler(user._id)}>
