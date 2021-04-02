@@ -140,3 +140,45 @@ export const deleteUser = expressAsyncHandler(async (req, res) => {
         throw new Error("User not found")
     }
 });
+
+/* 
+@description Get a user by id
+@route GET /api/users/:id
+@access private/admin (i.e only available to admin users)
+*/
+export const getUserById = expressAsyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id).select('-password') // fetch all user details but for the (decoded) password
+    if (user) {
+        res.json(user)
+    } else {
+        res.status(404)
+        throw new Error("User not found")
+    }
+});
+
+/* 
+@description Update user (done by admin)
+@route PUT /api/users/:id
+@access private/admin
+*/
+export const updateUser = expressAsyncHandler(async (req, res) => {
+    const user = await User.findById(req.params.id);
+
+    if (user) {
+        user.name = req.body.name || user.name; 
+        user.email = req.body.email || user.email; 
+
+        user.isAdmin = req.body.isAdmin === true ? true:  false // if null (i.e not provided) -> set as false
+
+        const updatedUser = await user.save(); 
+        res.json({
+            _id: updatedUser._id,
+            name: updatedUser.name, 
+            email: updatedUser.email, 
+            isAdmin: updatedUser.isAdmin, 
+        });
+    } else {
+        res.status(404);
+        throw new Error('User not found')
+    }
+});
