@@ -1,7 +1,7 @@
 import { IconButton, Paper, Table, TableBody, TableCell, TableContainer, TableHead, TablePagination, TableRow, Typography } from '@material-ui/core';
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux';
-import { getAllUsers } from '../../actions/userActions';
+import { deleteUser, getAllUsers } from '../../actions/userActions';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import MessageBox from '../../components/MessageBox/MessageBox';
 import useStyles from './styles.js';
@@ -30,13 +30,22 @@ const UsersListPage = (props) => {
     const userLogin = useSelector(state => state.userLogin);
     const { userInfo } = userLogin; 
 
+    const userDelete = useSelector(state => state.userDelete);
+    const { success: successDeleteUser } = userDelete; 
+
     useEffect(() => {
         if (userInfo && userInfo.isAdmin) {
         dispatch(getAllUsers())
         } else {
             props.history.push('/login')
         }
-    }, [dispatch, props])
+    }, [dispatch, props, successDeleteUser])
+
+    const deleteUserHandler = (userId) => {
+        if (window.confirm("Are you sure you want to delete user")) {
+            dispatch(deleteUser(userId));
+        }
+    }
     return (
         <>
             <Typography component="h1" variant="h4" className={classes.titleTypography} >
@@ -67,7 +76,7 @@ const UsersListPage = (props) => {
                                                 <IconButton>
                                                     <EditRoundedIcon/>
                                                 </IconButton>
-                                                <IconButton>
+                                                <IconButton onClick={() => deleteUserHandler(user._id)}>
                                                     <DeleteRoundedIcon/>
                                                 </IconButton>
                                             </TableCell>
