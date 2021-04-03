@@ -3,9 +3,10 @@ import React, { useState, useEffect } from 'react';
 import { Fragment } from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { getUserDetails } from '../../actions/userActions';
+import { getUserDetails, updateUser } from '../../actions/userActions';
 import LoadingSpinner from '../../components/LoadingSpinner/LoadingSpinner';
 import MessageBox from '../../components/MessageBox/MessageBox';
+import { USER_UPDATE_RESET } from '../../contstants/userConstants';
 import useStyles from './styles.js';
 
 const UserEditPage = (props) => {
@@ -20,23 +21,32 @@ const UserEditPage = (props) => {
     const userDetails = useSelector((state) => state.userDetails);
     const { loading, error, user } = userDetails;
 
+    const userUpdate = useSelector((state) => state.userUpdate);
+    const { loading: loadingUpdate, error: errorUpdate, success: successUpdate } = userUpdate;
+
     useEffect(() => {
+        if (successUpdate) {
+            dispatch({ type: USER_UPDATE_RESET });
+            props.history.push('/admin/allusers')
+        }
         if (!user.name || user._id !== userId) {
-            dispatch(getUserDetails(userId))
+            dispatch(getUserDetails(userId));
         }
         else {
-            setName(user.name); 
+            setName(user.name);
             setEmail(user.email);
-            setIsAdmin(user.isAdmin); 
+            setIsAdmin(user.isAdmin);
         }
-    }, [dispatch, user, userId]);
+    }, [dispatch, user, userId, successUpdate, props]);
 
     const submitHandler = (e) => {
         e.preventDefault();
-    }
-
-    const handleCheckBoxIsAdmin = (event) => {
-        setIsAdmin(event.target.checked)
+        dispatch(updateUser({
+            _id: userId,
+            name,
+            email,
+            isAdmin
+        }))
     }
 
     return (
@@ -50,6 +60,8 @@ const UserEditPage = (props) => {
                     <Typography component="h1" variant="h4" className={classes.titleTypography} >
                         EDIT USER
                 </Typography>
+                    {loadingUpdate && <LoadingSpinner />}
+                    {errorUpdate && <MessageBox severity="error">{errorUpdate}</MessageBox>}
                     {loading ? <LoadingSpinner /> : error ? <MessageBox severity="error">{error}</MessageBox> : (
                         <form className={classes.form} onSubmit={submitHandler} noValidate>
                             <TextField

@@ -1,6 +1,6 @@
 import axios from "axios";
 import { ORDER_LOGGED_IN_USER_RESET } from "../contstants/orderConstants";
-import { USER_DELETE_FAIL, USER_DELETE_REQUEST, USER_DELETE_SUCCESS, USER_DETAILS_FAIL, USER_DETAILS_REQUEST, USER_DETAILS_RESET, USER_DETAILS_SUCCESS, USER_LIST_FAIL, USER_LIST_REQUEST, USER_LIST_RESET, USER_LIST_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_UPDATE_PROFILE_FAIL, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_RESET, USER_UPDATE_PROFILE_SUCCESS } from "../contstants/userConstants"
+import { USER_DELETE_FAIL, USER_DELETE_REQUEST, USER_DELETE_SUCCESS, USER_DETAILS_FAIL, USER_DETAILS_REQUEST, USER_DETAILS_RESET, USER_DETAILS_SUCCESS, USER_LIST_FAIL, USER_LIST_REQUEST, USER_LIST_RESET, USER_LIST_SUCCESS, USER_LOGIN_FAIL, USER_LOGIN_REQUEST, USER_LOGIN_SUCCESS, USER_LOGOUT, USER_REGISTER_FAIL, USER_REGISTER_REQUEST, USER_REGISTER_SUCCESS, USER_UPDATE_FAIL, USER_UPDATE_PROFILE_FAIL, USER_UPDATE_PROFILE_REQUEST, USER_UPDATE_PROFILE_RESET, USER_UPDATE_PROFILE_SUCCESS, USER_UPDATE_REQUEST, USER_UPDATE_SUCCESS } from "../contstants/userConstants"
 
 export const login = (email, password) => async (dispatch) => {
     try {
@@ -199,6 +199,41 @@ export const deleteUser = (userId) => async (dispatch, getState) => { // id here
     } catch (error) {
         dispatch({
             type: USER_DELETE_FAIL,
+            payload: error.response && error.response.data.message ? // error.response.data.message is the custom error message sent from the backend
+                error.response.data.message : error.message
+        });
+    }
+}
+
+export const updateUser = (user) => async (dispatch, getState) => { // id here stands for 'profile' -- subject to change
+    try {
+        dispatch({
+            type: USER_UPDATE_REQUEST
+        });
+        
+        const { userLogin: { userInfo } } = getState();
+
+        const config = {
+            headers: {
+                'Content-Type': 'application/json',
+                Authorization: `Bearer ${userInfo.token}`
+            }
+        }
+        const { data } = await axios.put(`/api/users/${user._id}`, user, config);
+
+        dispatch({
+            type: USER_UPDATE_SUCCESS
+        });
+
+        // update user data
+        dispatch({
+            type: USER_DETAILS_SUCCESS,
+            payload: data
+        });
+        
+    } catch (error) {
+        dispatch({
+            type: USER_UPDATE_FAIL,
             payload: error.response && error.response.data.message ? // error.response.data.message is the custom error message sent from the backend
                 error.response.data.message : error.message
         });
