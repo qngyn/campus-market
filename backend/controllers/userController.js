@@ -1,6 +1,7 @@
 import expressAsyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
 import { generateAccessToken, generateRefreshToken } from '../utils/generateToken.js';
+import { setRefreshTokenCookie } from '../utils/helper.js';
 
 /* 
 @description Authenticate user and get token
@@ -14,17 +15,20 @@ export const authenticateUser = expressAsyncHandler(async (req, res) => {
 
     if (user && (await user.matchPassword(password))) {
         const accessToken = generateAccessToken(user._id)
-        res.cookie("jwt", accessToken, {secure: true, httpOnly: true})
 
         // add refreshToken to db
-        user.refreshToken = generateRefreshToken(user._id)
+        const refreshToken = generateRefreshToken(user._id)
+        user.refreshToken = refreshToken
+        // pass refresh token as a response cookie
+        setRefreshTokenCookie(res, refreshToken)
+        // res.cookie("refreshToken", refreshToken, {secure: true, httpOnly: true})
         await user.save()
         res.json({
             _id: user._id,
-            name: user.name, 
-            email: user.email, 
-            isAdmin: user.isAdmin, 
-            token: accessToken
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
+            accessToken: accessToken
         });
     } else {
         res.status(401);
@@ -49,18 +53,25 @@ export const registerUser = expressAsyncHandler(async (req, res) => {
 
     const user = await User.create({
         name,
-        email, 
+        email,
         password
     });
 
     if (user) { // if user is created successfully
         const accessToken = generateAccessToken(user._id)
-        res.cookie("jwt", accessToken, {secure: true, httpOnly: true})
+
+        // add refreshToken to db
+        const refreshToken = generateRefreshToken(user._id)
+        user.refreshToken = refreshToken
+        // pass refresh token as a response cookie
+        setRefreshTokenCookie(res, refreshToken)
+        // res.cookie("refreshToken", refreshToken, {secure: true, httpOnly: true})
+        await user.save()
         res.status(201).json({
             _id: user._id,
-            name: user.name, 
-            email: user.email, 
-            isAdmin: user.isAdmin, 
+            name: user.name,
+            email: user.email,
+            isAdmin: user.isAdmin,
             accessToken: accessToken
         });
     } else {
@@ -80,8 +91,8 @@ export const getUserProfile = expressAsyncHandler(async (req, res) => {
     if (user) {
         res.json({
             _id: user._id,
-            name: user.name, 
-            email: user.email, 
+            name: user.name,
+            email: user.email,
             isAdmin: user.isAdmin
         });
     } else {
@@ -100,20 +111,20 @@ export const updateUserProfile = expressAsyncHandler(async (req, res) => {
     const user = await User.findById(req.user._id);
 
     if (user) {
-        user.name = req.body.name || user.name; 
-        user.email = req.body.email || user.email; 
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
 
         if (req.body.password) {
-            user.password = req.body.password; 
+            user.password = req.body.password;
 
         }
 
-        const updatedUser = await user.save(); 
+        const updatedUser = await user.save();
         res.json({
             _id: updatedUser._id,
-            name: updatedUser.name, 
-            email: updatedUser.email, 
-            isAdmin: updatedUser.isAdmin, 
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin,
             token: generateToken(updatedUser._id)
         });
     } else {
@@ -139,7 +150,7 @@ export const getUsers = expressAsyncHandler(async (req, res) => {
 */
 export const deleteUser = expressAsyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
-    
+
     if (user) {
         await user.remove()
         res.json({ message: "User successfully deleted" })
@@ -173,17 +184,17 @@ export const updateUser = expressAsyncHandler(async (req, res) => {
     const user = await User.findById(req.params.id);
 
     if (user) {
-        user.name = req.body.name || user.name; 
-        user.email = req.body.email || user.email; 
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
 
-        user.isAdmin = req.body.isAdmin === true ? true:  false // if null (i.e not provided) -> set as false
+        user.isAdmin = req.body.isAdmin === true ? true : false // if null (i.e not provided) -> set as false
 
-        const updatedUser = await user.save(); 
+        const updatedUser = await user.save();
         res.json({
             _id: updatedUser._id,
-            name: updatedUser.name, 
-            email: updatedUser.email, 
-            isAdmin: updatedUser.isAdmin, 
+            name: updatedUser.name,
+            email: updatedUser.email,
+            isAdmin: updatedUser.isAdmin,
         });
     } else {
         res.status(404);

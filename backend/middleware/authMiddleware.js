@@ -27,7 +27,7 @@ export const authenticateProtectedRoute = expressAsyncHandler(async (req, res, n
     */
 
    const accessToken = req.cookies.jwt;
-
+    
    if (!accessToken) {
     res.status(403);
     throw new Error('No Access Token');
