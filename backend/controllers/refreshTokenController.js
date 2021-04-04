@@ -10,6 +10,7 @@ import { setRefreshTokenCookie } from '../utils/helper.js';
 @access public
 */
 export const getNewAccessToken = expressAsyncHandler(async (req, res) => {
+    // need to pass in header Cookie with value "refreshToken=<refreshToken>"
     const refreshToken = req.cookies.refreshToken;
     console.log("refreshToken: ", refreshToken)
 

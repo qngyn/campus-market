@@ -26,24 +26,27 @@ export const authenticateProtectedRoute = expressAsyncHandler(async (req, res, n
     } 
     */
 
-   const accessToken = req.cookies.jwt;
-    
-   if (!accessToken) {
-    res.status(403);
-    throw new Error('No Access Token');
-   }
+    // need to pass in header Cookie with value "jwt=<accessToken>"
+    // const accessToken = req.cookies.jwt;
+    if (req.headers.authorization && req.headers.authorization.startsWith('Bearer')) {
+        const accessToken = req.headers.authorization.split(' ')[1]; // get the token
+        if (!accessToken) {
+            res.status(403);
+            throw new Error('No Access Token');
+        }
 
-   try {
-       // use jwt.verify() method to verify the access token
-       // throw error if token has expired or is invalid signature
-       const decodedToken = jwt.verify(accessToken, process.env.JWT_SECRET)
-       req.user = await User.findById(decodedToken.id).select('-password'); //get the user and ignore the password field
-            
-       next()
-   } catch(error) {
-       res.status(401)
-       throw new Error("Access Token is Invalid")
-   }
+        try {
+            // use jwt.verify() method to verify the access token
+            // throw error if token has expired or is invalid signature
+            const decodedToken = jwt.verify(accessToken, process.env.JWT_SECRET)
+            req.user = await User.findById(decodedToken.id).select('-password'); //get the user and ignore the password field
+
+            next()
+        } catch (error) {
+            res.status(401)
+            throw new Error("Access Token is Invalid")
+        }
+    }
 });
 
 export const authenticateAdmin = (req, res, next) => {
@@ -51,7 +54,7 @@ export const authenticateAdmin = (req, res, next) => {
         next();
     }
     else {
-        res.status(401); 
+        res.status(401);
         throw new Error('Not authorized as an Admin')
     }
 }
