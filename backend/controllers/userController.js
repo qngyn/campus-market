@@ -1,6 +1,6 @@
 import expressAsyncHandler from 'express-async-handler';
 import User from '../models/userModel.js';
-import generateToken from '../utils/generateToken.js';
+import { generateAccessToken, generateRefreshToken } from '../utils/generateToken.js';
 
 /* 
 @description Authenticate user and get token
@@ -13,12 +13,18 @@ export const authenticateUser = expressAsyncHandler(async (req, res) => {
     const user = await User.findOne({ email }) // find the one user with the matching email
 
     if (user && (await user.matchPassword(password))) {
+        const accessToken = generateAccessToken(user._id)
+        res.cookie("jwt", accessToken, {secure: true, httpOnly: true})
+
+        // add refreshToken to db
+        user.refreshToken = generateRefreshToken(user._id)
+        await user.save()
         res.json({
             _id: user._id,
             name: user.name, 
             email: user.email, 
             isAdmin: user.isAdmin, 
-            token: generateToken(user._id)
+            token: accessToken
         });
     } else {
         res.status(401);
@@ -48,12 +54,14 @@ export const registerUser = expressAsyncHandler(async (req, res) => {
     });
 
     if (user) { // if user is created successfully
+        const accessToken = generateAccessToken(user._id)
+        res.cookie("jwt", accessToken, {secure: true, httpOnly: true})
         res.status(201).json({
             _id: user._id,
             name: user.name, 
             email: user.email, 
             isAdmin: user.isAdmin, 
-            token: generateToken(user._id)
+            accessToken: accessToken
         });
     } else {
         res.status(400);

@@ -1,5 +1,7 @@
 import express from 'express';
 import dotenv from 'dotenv';
+import cookieParser from 'cookie-parser';
+
 import { notFoundHandler, errorHandler } from './middleware/errorMiddleware.js';
 import connectDB from './config/db.js';
 import productRoutes from './routes/productRoutes.js';
@@ -14,6 +16,7 @@ const app = express();
 
 // middleware to parse json (from req.body)
 app.use(express.json());
+app.use(cookieParser())
 
 app.use((req, res, next) => {
     console.log(req.originalUrl);
